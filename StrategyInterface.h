@@ -11,8 +11,8 @@ public:
   virtual void setup() = 0;
   virtual void off() = 0;
   virtual bool isSetuped() = 0;
-  virtual void setLeds(Led* ledsArr[COUNT_OF_LEDS]) = 0;
-  virtual void handleCommand(int r, int g, int b) = 0;
+  virtual void setLeds(Led* leds[COUNT_OF_LEDS]) = 0;
+  virtual void handleCommand(int numCommand) = 0;
   virtual ~StrategyInterface() = default;
 };
 

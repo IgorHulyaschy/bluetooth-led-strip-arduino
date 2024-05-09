@@ -5,26 +5,26 @@
 
 #include "PixelWrapper.h"
 #include "RGB.h"
-// #include "Timer.h"
+#include "Timer.h"
 
 
 class Led {
 public:
-  Led(int ledNumber, RGB color, PixelWrapper& pixelLib);
+  Led(int ledNumber, long executeAt, RGB color, PixelWrapper& pixelLib);
 
   void setColor();
-  void update(int r, int g, int b);
-  // unix getTime();
+  void update(int r, int g, int b, unix time);
+  unix getTime();
   void show();
   bool isOff();
   RGB getColor();
-  // bool checkTime(unix now);
+  bool checkTime(unix now);
 
 private:
   RGB color;
   PixelWrapper& pixelLib;
   int ledNumber;
-  // unix executeAt;
+  unix executeAt;
 };
 
 #endif

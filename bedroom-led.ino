@@ -12,31 +12,16 @@
 
 
 // Led* ledsForGradient[COUNT_OF_LEDS];
-Led* ledsForMono[COUNT_OF_LEDS];
-PixelWrapper pixelWrapper = PixelWrapper();
+Led* leds[COUNT_OF_LEDS];
+Adafruit_NeoPixel adafruit_NeoPixel = Adafruit_NeoPixel(COUNT_OF_LEDS, LED_PIN);
+PixelWrapper pixelWrapper = PixelWrapper(adafruit_NeoPixel);
 Bluetooth bluetooth = Bluetooth();
-RGB rgbs[7] = {
-  //white
-  RGB(255, 150, 100),
-  // red
-  RGB(255, 0, 0),
-  //yellow
-  RGB(246, 130, 6),
-  // magenta
-  RGB(139, 0, 255),
-  // green
-  RGB(3, 203, 17),
-  //philetoviy
-  RGB(255, 0, 107),
-  //blue
-  RGB(37, 3, 255)
-};
+// MonoColorStrategy monoColorStrategy = MonoColorStrategy(pixelWrapper);
+GradientStrategy gradientStrategy = GradientStrategy(pixelWrapper);
 
 
 // TODO implement
 // DynamicColorStrategy dynamicColorStrategy = DynamicColorStrategy(pixelWrapper);
-MonoColorStrategy monoColorStrategy = MonoColorStrategy(pixelWrapper);
-// GradientStrategy* gradientStrategy = new GradientStrategy(pixelWrapper);
 
 void setup() {
   Serial.begin(9600);
@@ -46,46 +31,43 @@ void setup() {
   for (int i = 0; i < COUNT_OF_LEDS; i++) {
     RGB rgb = RGB(0, 0, 0);
     // ledsForGradient[i] = new Led(i, rgb, pixelWrapper);
-    ledsForMono[i] = new Led(i, rgb, pixelWrapper);
+    leds[i] = new Led(i, 0, rgb, pixelWrapper);
   }
-  // Strategies init
-  monoColorStrategy.setLeds(ledsForMono);
+
+  // monoColorStrategy.setLeds(leds);
+  gradientStrategy.setLeds(leds);
   // gradientStrategy->setLeds(ledsForGradient);
   // dynamicColorStrategy.setLeds(leds);
   // Leds strip lib init
-  // initiateTimer();
+  initiateTimer();
   pixelWrapper.begin();
 }
 
 void loop() {
 	char command = bluetooth.read();
+  Serial.println("loop");
   if(command != '\0') {
-    bluetooth.waitForNextCommand(); 
-    Serial.println(command);
     switch (command) {
       case '0':
         // gradientStrategy->off();
-        monoColorStrategy.off();
+        // monoColorStrategy.off();
         break;
-      // case '8':
-      //   if(!gradientStrategy->isSetuped()) {
-      //     monoColorStrategy.off();
-      //     gradientStrategy->setup();
-      //   }
-      //   break;
+      case '8':
+        if(!gradientStrategy.isSetuped()) {
+          // monoColorStrategy.off();
+          gradientStrategy.setup();
+        }
+        break;
       default:
-        Serial.println("here");
-        // gradientStrategy.off();
-        Serial.println("here1");
-        int index = command - '0';
-        RGB cursor = rgbs[index-1];
-        monoColorStrategy.handleCommand(cursor.getRed(), cursor.getGreen(), cursor.getBlue());
+        // int index = command - '0';
+        // monoColorStrategy.handleCommand(index-1);
         break;
     }
   }
-  // if(gradientStrategy->isSetuped()) {
-  //   gradientStrategy->loop();
-  // }
+
+  if(gradientStrategy.isSetuped()) {
+    gradientStrategy.loop();
+  }
 }
 
 // TODO implement

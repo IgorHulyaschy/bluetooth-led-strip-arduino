@@ -3,6 +3,7 @@
 
 #include "global-vars.h"
 #include "Led.h"
+#include "RGB.h"
 #include "PixelWrapper.h"
 #include "StrategyInterface.h"
 
@@ -14,14 +15,30 @@ class MonoColorStrategy final : public StrategyInterface {
   void setup() override;
   void off() override;
   bool isSetuped() override;
-  void setLeds(Led* ledsArr[COUNT_OF_LEDS]) override;
-  void handleCommand(int r, int g, int b) override;
+  void setLeds(Led* leds[COUNT_OF_LEDS]) override;
+  void handleCommand(int numCommand) override;
 
   virtual ~MonoColorStrategy() = default;
   private:
   PixelWrapper& pixelWrapper;
   Led* leds[COUNT_OF_LEDS];
   bool isOn = false;
+  RGB rgbs[7] = {
+    //white
+    RGB(255, 150, 100),
+    // red
+    RGB(255, 0, 0),
+    //yellow
+    RGB(246, 130, 6),
+    // magenta
+    RGB(139, 0, 255),
+    // green
+    RGB(3, 203, 17),
+    //philetoviy
+    RGB(255, 0, 107),
+    //blue
+    RGB(37, 3, 255)
+  };
 };
 
 #endif
