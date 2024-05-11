@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Adafruit_NeoPixel.h>
 
 #include "global-vars.h"
 #include "RGB.h"
@@ -11,9 +12,9 @@
 #include "Timer.h"
 
 
-// Led* ledsForGradient[COUNT_OF_LEDS];
-Led* leds[COUNT_OF_LEDS];
-Adafruit_NeoPixel adafruit_NeoPixel = Adafruit_NeoPixel(COUNT_OF_LEDS, LED_PIN);
+// Led* ledsForGradient[NUMPIXELS];
+Led* leds[NUMPIXELS];
+Adafruit_NeoPixel adafruit_NeoPixel = Adafruit_NeoPixel(NUMPIXELS, LED_PIN);
 PixelWrapper pixelWrapper = PixelWrapper(adafruit_NeoPixel);
 Bluetooth bluetooth = Bluetooth();
 // MonoColorStrategy monoColorStrategy = MonoColorStrategy(pixelWrapper);
@@ -28,12 +29,15 @@ void setup() {
   // Initiating hm-10 module
   bluetooth.begin(9600);
   // Leds init
-  for (int i = 0; i < COUNT_OF_LEDS; i++) {
-    RGB rgb = RGB(0, 0, 0);
-    // ledsForGradient[i] = new Led(i, rgb, pixelWrapper);
+  RGB rgb = RGB(0, 0, 0);
+  for (int i = 0; i < NUMPIXELS; i++) {
     leds[i] = new Led(i, 0, rgb, pixelWrapper);
+  };
+  // Serial.println("****");
+  for (int i = 0; i < NUMPIXELS; i++) {
+      Serial.println(i);
+      Serial.println(leds[i]->getNum());
   }
-
   // monoColorStrategy.setLeds(leds);
   gradientStrategy.setLeds(leds);
   // gradientStrategy->setLeds(ledsForGradient);
@@ -45,7 +49,7 @@ void setup() {
 
 void loop() {
 	char command = bluetooth.read();
-  Serial.println("loop");
+  // Serial.println("loop");
   if(command != '\0') {
     switch (command) {
       case '0':

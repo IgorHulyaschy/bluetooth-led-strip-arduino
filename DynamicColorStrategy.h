@@ -15,13 +15,13 @@
 //   void loop() override;
 //   void setup() override;
 //   void off() override;
-//   void setLeds(Led* ledsArr[COUNT_OF_LEDS]) override;
+//   void setLeds(Led* ledsArr[NUMPIXELS]) override;
 //   void handleCommand(int r, int g, int b) override;
 
 //   virtual ~DynamicColorStrategy() = default;
 //   private:
 //   PixelWrapper& pixelWrapper;
-//   Led* leds[COUNT_OF_LEDS];
+//   Led* leds[NUMPIXELS];
 //   bool isOn = false;
 // };
 

@@ -19,14 +19,14 @@ public:
   void loop() override;
   void handleCommand(int numCommand) override;
   void generateGradientColor(float position);
-  void setLeds(Led* ledsArr[COUNT_OF_LEDS]) override;
+  void setLeds(Led* ledsArr[NUMPIXELS]) override;
 
   virtual ~GradientStrategy() override = default;
 private:
   bool isSetupDone = false;
   float step = 0.0025;
   PixelWrapper& pixelWrapper;
-  Led* leds[COUNT_OF_LEDS];
+  Led* leds[NUMPIXELS];
   int rd = 0;
   int gr = 0;
   int bl = 0;

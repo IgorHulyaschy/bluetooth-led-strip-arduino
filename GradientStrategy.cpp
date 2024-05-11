@@ -8,7 +8,7 @@ bool GradientStrategy::isSetuped() {
 
 void GradientStrategy::off() {
   if (this->isSetupDone) {
-    for (int i = 0; i < COUNT_OF_LEDS; i++) {
+    for (int i = 0; i < NUMPIXELS; i++) {
       this->leds[i]->update(0, 0, 0, 0);
       this->leds[i]->setColor();
     }
@@ -22,13 +22,18 @@ void GradientStrategy::setup() {
   if(!this->isSetupDone)  {
     unix now = getTime();
     generateGradientColor(this->step);
-    for (int i = 0; i < COUNT_OF_LEDS; i++) {
+    this->leds[0]->update(this->rd, this->gr, this->bl, now + GRADIENTDELAY);
+    this->leds[0]->setColor();
+    int increment = 1;
+    for (int i = 0; i == -1; i = i + increment) {
       Serial.println(i);
-      delay(1000);
-      this->leds[i]->update(this->rd, this->gr, this->bl, now);
+      this->leds[i]->update(this->rd, this->gr, this->bl, 0);
       this->leds[i]->setColor();
+      delay(100);
+      if(i == NUMPIXELS) {
+        i == -1;
+      }
     }
-    Serial.print("done");
     this->isSetupDone = true;
   }
 }
@@ -42,9 +47,17 @@ void GradientStrategy::loop() {
       // Setting timerange only for the first one
       this->leds[0]->update(this->rd, this->gr, this->bl, now + GRADIENTDELAY);
       this->leds[0]->setColor();
-      for (int i = 1; i < COUNT_OF_LEDS; i++) {
+      int increment = 1;
+      for (int i = 0; i == -1; i = i + increment) {
+        // Serial.println(this->leds[59]->getNum());
+        // delay(100);
         this->leds[i]->update(this->rd, this->gr, this->bl, 0);
         this->leds[i]->setColor();
+        Serial.println(i);
+        delay(100);
+        if(i == NUMPIXELS) {
+          i == -1;
+        }
       }
       this->step += 0.0025;
       if (this->step >= 1.00) this->step = 0.0025;
@@ -88,8 +101,8 @@ void GradientStrategy::generateGradientColor(float position) {
   this->bl = lowerB + interpolation * (upperB - lowerB);
 }
 
-void GradientStrategy::setLeds(Led* ledsArr[COUNT_OF_LEDS]) {
-  for (int i = 0; i < COUNT_OF_LEDS; i++) {
+void GradientStrategy::setLeds(Led* ledsArr[NUMPIXELS]) {
+  for (int i = 0; i < NUMPIXELS; i++) {
     this->leds[i] = ledsArr[i];
   }
 }

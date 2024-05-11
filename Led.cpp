@@ -7,6 +7,10 @@ void Led::setColor() {
   this->pixelLib.setPixelColor(ledNumber, this->color.getRed(), this->color.getGreen(), this->color.getBlue());
 }
 
+int Led::getNum() {
+  return this->ledNumber;
+}
+
 void Led::update(int r, int g, int b, unix time) {
   this->color = RGB(r, g, b);
   this->executeAt = time;

@@ -15,13 +15,13 @@ class MonoColorStrategy final : public StrategyInterface {
   void setup() override;
   void off() override;
   bool isSetuped() override;
-  void setLeds(Led* leds[COUNT_OF_LEDS]) override;
+  void setLeds(Led* leds[NUMPIXELS]) override;
   void handleCommand(int numCommand) override;
 
   virtual ~MonoColorStrategy() = default;
   private:
   PixelWrapper& pixelWrapper;
-  Led* leds[COUNT_OF_LEDS];
+  Led* leds[NUMPIXELS];
   bool isOn = false;
   RGB rgbs[7] = {
     //white

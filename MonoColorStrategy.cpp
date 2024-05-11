@@ -2,8 +2,8 @@
 
 MonoColorStrategy::MonoColorStrategy(PixelWrapper& pixelWrapper): pixelWrapper(pixelWrapper) {}
 
-void MonoColorStrategy::setLeds(Led* ledsArr[COUNT_OF_LEDS]) {
-  for (int i = 0; i < COUNT_OF_LEDS; i++) {
+void MonoColorStrategy::setLeds(Led* ledsArr[NUMPIXELS]) {
+  for (int i = 0; i < NUMPIXELS; i++) {
     this->leds[i] = ledsArr[i];
   }
 }
@@ -17,22 +17,23 @@ void MonoColorStrategy::setup() {
 
 void MonoColorStrategy::handleCommand(int numCommand) {
   RGB rgb = this->rgbs[numCommand];
-  for (int i = 0; i < COUNT_OF_LEDS; i++) {
-    Serial.println(i);
+  int increment = 1;
+  for (int i = 0; i == -1; i = i + increment) {
     this->leds[i]->update(rgb.getRed(), rgb.getGreen(), rgb.getRed(), 0);
     this->leds[i]->setColor();
+    if(i == NUMPIXELS) {
+      i = -1;
+    }
   }
   this->pixelWrapper.show();
   this->isOn = true;
 }
 
 void MonoColorStrategy::off() {
-  for (int i = 0; i < COUNT_OF_LEDS; i++) {
-    Serial.println(i);
+  for (int i = 0; i < NUMPIXELS; i++) {
     this->leds[i]->update(0, 0, 0, 0);
     this->leds[i]->setColor();
   }
-  Serial.println("loopppp");
   this->pixelWrapper.show();
   this->isOn = false;
 }

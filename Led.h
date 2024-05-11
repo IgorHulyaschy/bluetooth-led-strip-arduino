@@ -17,6 +17,7 @@ public:
   unix getTime();
   void show();
   bool isOff();
+  int getNum();
   RGB getColor();
   bool checkTime(unix now);
 
