@@ -9,7 +9,7 @@ char Bluetooth::read() {
     char c = this->HM10.read();
     return c;
   }
-  return '8';
+  return '\0';
 };
 
 void Bluetooth::waitForNextCommand() {

@@ -17,14 +17,12 @@ void MonoColorStrategy::setup() {
 
 void MonoColorStrategy::handleCommand(int numCommand) {
   RGB rgb = this->rgbs[numCommand];
-  int increment = 1;
-  for (int i = 0; i == -1; i = i + increment) {
+  for (int i = 0; i < NUMPIXELS; i++) {
+    Serial.println(this->leds[i]->getNum());
     this->leds[i]->update(rgb.getRed(), rgb.getGreen(), rgb.getRed(), 0);
-    this->leds[i]->setColor();
-    if(i == NUMPIXELS) {
-      i = -1;
-    }
+    this->pixelWrapper.setPixelColor(i, rgb.getRed(), rgb.getGreen(), rgb.getRed());
   }
+  Serial.println("here");
   this->pixelWrapper.show();
   this->isOn = true;
 }
@@ -32,7 +30,7 @@ void MonoColorStrategy::handleCommand(int numCommand) {
 void MonoColorStrategy::off() {
   for (int i = 0; i < NUMPIXELS; i++) {
     this->leds[i]->update(0, 0, 0, 0);
-    this->leds[i]->setColor();
+    this->pixelWrapper.setPixelColor(i, 0, 0, 0);
   }
   this->pixelWrapper.show();
   this->isOn = false;

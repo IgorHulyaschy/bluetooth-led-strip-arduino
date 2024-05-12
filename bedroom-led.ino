@@ -11,15 +11,14 @@
 #include "GradientStrategy.h"
 #include "Timer.h"
 
-
-// Led* ledsForGradient[NUMPIXELS];
-Led* leds[NUMPIXELS];
+Led leds[NUMPIXELS];
+RGB colors[NUMPIXELS];
 Adafruit_NeoPixel adafruit_NeoPixel = Adafruit_NeoPixel(NUMPIXELS, LED_PIN);
 PixelWrapper pixelWrapper = PixelWrapper(adafruit_NeoPixel);
+
 Bluetooth bluetooth = Bluetooth();
 // MonoColorStrategy monoColorStrategy = MonoColorStrategy(pixelWrapper);
 GradientStrategy gradientStrategy = GradientStrategy(pixelWrapper);
-
 
 // TODO implement
 // DynamicColorStrategy dynamicColorStrategy = DynamicColorStrategy(pixelWrapper);
@@ -28,48 +27,51 @@ void setup() {
   Serial.begin(9600);
   // Initiating hm-10 module
   bluetooth.begin(9600);
-  // Leds init
-  RGB rgb = RGB(0, 0, 0);
-  for (int i = 0; i < NUMPIXELS; i++) {
-    leds[i] = new Led(i, 0, rgb, pixelWrapper);
-  };
-  // Serial.println("****");
-  for (int i = 0; i < NUMPIXELS; i++) {
-      Serial.println(i);
-      Serial.println(leds[i]->getNum());
+  for(int i = 0; i < NUMPIXELS; i++) {
+    colors[i] = RGB();
   }
-  // monoColorStrategy.setLeds(leds);
-  gradientStrategy.setLeds(leds);
-  // gradientStrategy->setLeds(ledsForGradient);
-  // dynamicColorStrategy.setLeds(leds);
-  // Leds strip lib init
+
+  for (int i = 0; i < NUMPIXELS; i++) {
+    leds[i] = Led(i, 0, &colors[i]);
+  };
+
+  Led* ledsPtr[NUMPIXELS];
+  for (int i = 0; i < NUMPIXELS; ++i) {
+    ledsPtr[i] = &leds[i];
+  }
+
+  // monoColorStrategy.setLeds(ledsPtr);
+  gradientStrategy.setLeds(ledsPtr);
+  // // dynamicColorStrategy.setLeds(leds);
+  // // Leds strip lib init
   initiateTimer();
   pixelWrapper.begin();
 }
 
 void loop() {
 	char command = bluetooth.read();
-  // Serial.println("loop");
   if(command != '\0') {
     switch (command) {
       case '0':
-        // gradientStrategy->off();
+        gradientStrategy.off();
         // monoColorStrategy.off();
         break;
       case '8':
+        // monoColorStrategy.off();
         if(!gradientStrategy.isSetuped()) {
-          // monoColorStrategy.off();
           gradientStrategy.setup();
         }
         break;
       default:
-        // int index = command - '0';
+        int index = command - '0';
+        gradientStrategy.off();
         // monoColorStrategy.handleCommand(index-1);
         break;
     }
   }
 
   if(gradientStrategy.isSetuped()) {
+    Serial.println("loop");
     gradientStrategy.loop();
   }
 }

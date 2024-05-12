@@ -10,20 +10,17 @@
 
 class Led {
 public:
-  Led(int ledNumber, long executeAt, RGB color, PixelWrapper& pixelLib);
+  Led();
+  Led(int ledNumber, unix executeAt, RGB* color);
 
-  void setColor();
   void update(int r, int g, int b, unix time);
   unix getTime();
-  void show();
   bool isOff();
   int getNum();
-  RGB getColor();
   bool checkTime(unix now);
 
 private:
-  RGB color;
-  PixelWrapper& pixelLib;
+  RGB* color;
   int ledNumber;
   unix executeAt;
 };
