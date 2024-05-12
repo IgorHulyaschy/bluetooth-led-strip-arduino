@@ -15,7 +15,7 @@ PixelWrapper pixelWrapper = PixelWrapper();
 
 Bluetooth bluetooth = Bluetooth();
 MonoColorStrategy monoColorStrategy = MonoColorStrategy(pixelWrapper);
-// GradientStrategy gradientStrategy = GradientStrategy(pixelWrapper);
+GradientStrategy gradientStrategy = GradientStrategy(pixelWrapper);
 
 // TODO implement
 // DynamicColorStrategy dynamicColorStrategy = DynamicColorStrategy(pixelWrapper);
@@ -25,7 +25,7 @@ void setup() {
   // Initiating hm-10 module
   bluetooth.begin(9600);
 
-  // gradientStrategy.initLeds();
+  gradientStrategy.initLeds();
   // // dynamicColorStrategy.setLeds(leds);
   // // Leds strip lib init
   initiateTimer();
@@ -37,26 +37,26 @@ void loop() {
   if(command != '\0') {
     switch (command) {
       case '0':
-        // gradientStrategy.off();
+        gradientStrategy.off();
         monoColorStrategy.off();
         break;
       case '8':
         monoColorStrategy.off();
-        // if(!gradientStrategy.isSetuped()) {
-        //   gradientStrategy.setup();
-        // }
+        if(!gradientStrategy.isSetuped()) {
+          gradientStrategy.setup();
+        }
         break;
       default:
         int index = command - '0';
-        // gradientStrategy.off();
+        gradientStrategy.off();
         monoColorStrategy.handleCommand(index-1);
         break;
     }
   }
 
-  // if(gradientStrategy.isSetuped()) {
-  //   gradientStrategy.loop();
-  // }
+  if(gradientStrategy.isSetuped()) {
+    gradientStrategy.loop();
+  }
 }
 
 // TODO implement
