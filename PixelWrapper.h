@@ -6,14 +6,13 @@
 
 class PixelWrapper {
 public:
-  PixelWrapper(Adafruit_NeoPixel& adafruit_NeoPixel); 
   void setPixelColor(int index, int r, int g, int b);
   void show();
   void off(int ledNumber);
   void begin();
 
 private:
-  Adafruit_NeoPixel& lib;
+  Adafruit_NeoPixel lib = Adafruit_NeoPixel(NUMPIXELS, LED_PIN);
 };
 
 #endif

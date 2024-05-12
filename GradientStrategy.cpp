@@ -2,6 +2,12 @@
 
 GradientStrategy::GradientStrategy(PixelWrapper& pixelWrapper): pixelWrapper(pixelWrapper) {}
 
+void GradientStrategy::initLeds() {
+  for (int i = 0; i < NUMPIXELS; i++) {
+    this->leds[i] = Led(i, 0);
+  };
+}
+
 bool GradientStrategy::isSetuped() {
   return this->isSetupDone;
 }
@@ -9,7 +15,7 @@ bool GradientStrategy::isSetuped() {
 void GradientStrategy::off() {
   if (this->isSetupDone) {
     for (int i = 0; i < NUMPIXELS; i++) {
-      this->leds[i]->update(0, 0, 0, 0);
+      // this->leds[i].updateExecuteAt(0);
       this->pixelWrapper.setPixelColor(i, 0, 0, 0);
     }
     this->pixelWrapper.show();
@@ -21,7 +27,7 @@ void GradientStrategy::setup() {
   if(!this->isSetupDone)  {
     unix now = getTime();
     generateGradientColor(this->step);
-    this->leds[0]->update(this->rd, this->gr, this->bl, now + GRADIENTDELAY);
+    this->leds[0].updateExecuteAt(now + GRADIENTDELAY);
     this->pixelWrapper.setPixelColor(0, this->rd, this->gr, this->bl);
     this->isSetupDone = true;
   }
@@ -31,23 +37,13 @@ void GradientStrategy::loop() {
   if(this->isSetupDone) {
     unix now = getTime();
     generateGradientColor(this->step);
-    bool needToChangeColor = this->leds[0]->checkTime(now);
+    bool needToChangeColor = leds[0].checkTime(now);
     if (needToChangeColor) {
-      Serial.println(needToChangeColor);
       // Setting timerange only for the first one
-      this->leds[0]->update(this->rd, this->gr, this->bl, now + GRADIENTDELAY);
-      this->pixelWrapper.setPixelColor(0, this->rd, this->gr, this->bl);
+      this->leds[0].updateExecuteAt(now + GRADIENTDELAY);
       for (int i = 0; i < NUMPIXELS; i++) {
-        this->leds[i]->update(this->rd, this->gr, this->bl, 0);
         this->pixelWrapper.setPixelColor(i, this->rd, this->gr, this->bl);
       }
-      Serial.println("Red");
-      Serial.println(this->rd);
-      Serial.println("GREEn");
-      Serial.println(this->gr);
-      Serial.println("Blue");
-      Serial.println(this->bl);
-      delay(1000);
       this->step += 0.0025;
       if (this->step >= 1.00) this->step = 0.0025;
       this->pixelWrapper.show();
@@ -88,10 +84,4 @@ void GradientStrategy::generateGradientColor(float position) {
   this->rd = lowerR + interpolation * (upperR - lowerR);
   this->gr = lowerG + interpolation * (upperG - lowerG);
   this->bl = lowerB + interpolation * (upperB - lowerB);
-}
-
-void GradientStrategy::setLeds(Led* ledsArr[NUMPIXELS]) {
-  for (int i = 0; i < NUMPIXELS; i++) {
-    this->leds[i] = ledsArr[i];
-  }
 }

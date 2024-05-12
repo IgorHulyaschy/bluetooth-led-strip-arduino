@@ -11,14 +11,11 @@
 #include "GradientStrategy.h"
 #include "Timer.h"
 
-Led leds[NUMPIXELS];
-RGB colors[NUMPIXELS];
-Adafruit_NeoPixel adafruit_NeoPixel = Adafruit_NeoPixel(NUMPIXELS, LED_PIN);
-PixelWrapper pixelWrapper = PixelWrapper(adafruit_NeoPixel);
+PixelWrapper pixelWrapper = PixelWrapper();
 
 Bluetooth bluetooth = Bluetooth();
-// MonoColorStrategy monoColorStrategy = MonoColorStrategy(pixelWrapper);
-GradientStrategy gradientStrategy = GradientStrategy(pixelWrapper);
+MonoColorStrategy monoColorStrategy = MonoColorStrategy(pixelWrapper);
+// GradientStrategy gradientStrategy = GradientStrategy(pixelWrapper);
 
 // TODO implement
 // DynamicColorStrategy dynamicColorStrategy = DynamicColorStrategy(pixelWrapper);
@@ -27,21 +24,8 @@ void setup() {
   Serial.begin(9600);
   // Initiating hm-10 module
   bluetooth.begin(9600);
-  for(int i = 0; i < NUMPIXELS; i++) {
-    colors[i] = RGB();
-  }
 
-  for (int i = 0; i < NUMPIXELS; i++) {
-    leds[i] = Led(i, 0, &colors[i]);
-  };
-
-  Led* ledsPtr[NUMPIXELS];
-  for (int i = 0; i < NUMPIXELS; ++i) {
-    ledsPtr[i] = &leds[i];
-  }
-
-  // monoColorStrategy.setLeds(ledsPtr);
-  gradientStrategy.setLeds(ledsPtr);
+  // gradientStrategy.initLeds();
   // // dynamicColorStrategy.setLeds(leds);
   // // Leds strip lib init
   initiateTimer();
@@ -53,27 +37,26 @@ void loop() {
   if(command != '\0') {
     switch (command) {
       case '0':
-        gradientStrategy.off();
-        // monoColorStrategy.off();
+        // gradientStrategy.off();
+        monoColorStrategy.off();
         break;
       case '8':
-        // monoColorStrategy.off();
-        if(!gradientStrategy.isSetuped()) {
-          gradientStrategy.setup();
-        }
+        monoColorStrategy.off();
+        // if(!gradientStrategy.isSetuped()) {
+        //   gradientStrategy.setup();
+        // }
         break;
       default:
         int index = command - '0';
-        gradientStrategy.off();
-        // monoColorStrategy.handleCommand(index-1);
+        // gradientStrategy.off();
+        monoColorStrategy.handleCommand(index-1);
         break;
     }
   }
 
-  if(gradientStrategy.isSetuped()) {
-    Serial.println("loop");
-    gradientStrategy.loop();
-  }
+  // if(gradientStrategy.isSetuped()) {
+  //   gradientStrategy.loop();
+  // }
 }
 
 // TODO implement

@@ -5,23 +5,19 @@
 #include "Led.h"
 #include "RGB.h"
 #include "PixelWrapper.h"
-#include "StrategyInterface.h"
 
-class MonoColorStrategy final : public StrategyInterface {
+class MonoColorStrategy {
   public:
   MonoColorStrategy(PixelWrapper& pixelWrapper);
 
-  void loop() override;
-  void setup() override;
-  void off() override;
-  bool isSetuped() override;
-  void setLeds(Led* leds[NUMPIXELS]) override;
-  void handleCommand(int numCommand) override;
+  void loop();
+  void setup();
+  void off();
+  bool isSetuped();
+  void handleCommand(int numCommand);
 
-  virtual ~MonoColorStrategy() = default;
   private:
   PixelWrapper& pixelWrapper;
-  Led* leds[NUMPIXELS];
   bool isOn = false;
   RGB rgbs[7] = {
     //white
